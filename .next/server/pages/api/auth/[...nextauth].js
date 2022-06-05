@@ -1,0 +1,76 @@
+"use strict";
+/*
+ * ATTENTION: An "eval-source-map" devtool has been used.
+ * This devtool is neither made for production nor for readable output files.
+ * It uses "eval()" calls to create a separate source file with attached SourceMaps in the browser devtools.
+ * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
+ * or disable the default devtool with "devtool: false".
+ * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
+ */
+(() => {
+var exports = {};
+exports.id = "pages/api/auth/[...nextauth]";
+exports.ids = ["pages/api/auth/[...nextauth]"];
+exports.modules = {
+
+/***/ "faunadb":
+/*!**************************!*\
+  !*** external "faunadb" ***!
+  \**************************/
+/***/ ((module) => {
+
+module.exports = require("faunadb");
+
+/***/ }),
+
+/***/ "next-auth":
+/*!****************************!*\
+  !*** external "next-auth" ***!
+  \****************************/
+/***/ ((module) => {
+
+module.exports = require("next-auth");
+
+/***/ }),
+
+/***/ "next-auth/providers/github":
+/*!*********************************************!*\
+  !*** external "next-auth/providers/github" ***!
+  \*********************************************/
+/***/ ((module) => {
+
+module.exports = require("next-auth/providers/github");
+
+/***/ }),
+
+/***/ "(api)/./src/pages/api/auth/[...nextauth].ts":
+/*!*********************************************!*\
+  !*** ./src/pages/api/auth/[...nextauth].ts ***!
+  \*********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var faunadb__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! faunadb */ \"faunadb\");\n/* harmony import */ var faunadb__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(faunadb__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var next_auth__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! next-auth */ \"next-auth\");\n/* harmony import */ var next_auth__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(next_auth__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var next_auth_providers_github__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! next-auth/providers/github */ \"next-auth/providers/github\");\n/* harmony import */ var next_auth_providers_github__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(next_auth_providers_github__WEBPACK_IMPORTED_MODULE_2__);\n/* harmony import */ var _services_fauna__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../services/fauna */ \"(api)/./src/services/fauna.ts\");\n\n\n\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (next_auth__WEBPACK_IMPORTED_MODULE_1___default()({\n    // Configure um ou mais autenticação provider\n    providers: [\n        next_auth_providers_github__WEBPACK_IMPORTED_MODULE_2___default()({\n            clientId: process.env.GITHUB_CLIENT_ID,\n            clientSecret: process.env.GITHUB_CLIENT_SECRET,\n            //O que será necessario repassar\n            authorization: {\n                //Os parametros\n                params: {\n                    scope: \"read:user\"\n                }\n            }\n        })\n    ],\n    callbacks: {\n        async session ({ session  }) {\n            try {\n                const userActiveSubscription = await _services_fauna__WEBPACK_IMPORTED_MODULE_3__.fauna.query(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Get(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Intersection([\n                    faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Match(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Index(\"subscription_by_user_ref\"), faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Select(\"ref\", faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Get(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Match(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Index(\"user_by_email\"), faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Casefold(session.user.email))))),\n                    faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Match(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Index(\"subscription_by_status\"), \"active\")\n                ])));\n                return {\n                    ...session,\n                    activeSubscription: userActiveSubscription\n                };\n            } catch  {\n                return {\n                    ...session,\n                    activeSubscription: null\n                };\n            }\n        },\n        async signIn ({ user , account , profile , credentials  }) {\n            const { email  } = user;\n            try {\n                //Create is fauna\n                await _services_fauna__WEBPACK_IMPORTED_MODULE_3__.fauna.query(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Let({\n                    userExists: faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Exists(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Match(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Index(\"user_by_email\"), faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Casefold(user.email)))\n                }, faunadb__WEBPACK_IMPORTED_MODULE_0__.query.If(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Var(\"userExists\"), faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Get(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Match(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Index(\"user_by_email\"), faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Casefold(user.email))), faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Create(faunadb__WEBPACK_IMPORTED_MODULE_0__.query.Collection(\"users\"), {\n                    data: {\n                        email\n                    }\n                }))));\n                return true;\n            } catch  {\n                return false;\n            }\n        }\n    }\n}));\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi9zcmMvcGFnZXMvYXBpL2F1dGgvWy4uLm5leHRhdXRoXS50cy5qcyIsIm1hcHBpbmdzIjoiOzs7Ozs7Ozs7OztBQUFxQztBQUVKO0FBQ3VCO0FBRVI7QUFFaEQsaUVBQWVFLGdEQUFRLENBQUM7SUFDcEI7SUFDRUcsU0FBTyxFQUFFO1FBQ1BGLGlFQUFjLENBQUM7WUFDWEcsUUFBUSxFQUFFQyxPQUFPLENBQUNDLEdBQUcsQ0FBQ0MsZ0JBQWdCO1lBQ3RDQyxZQUFZLEVBQUVILE9BQU8sQ0FBQ0MsR0FBRyxDQUFDRyxvQkFBb0I7WUFDOUM7WUFDQUMsYUFBYSxFQUFFO2dCQUNYLGVBQWU7Z0JBQ2ZDLE1BQU0sRUFBRTtvQkFDSkMsS0FBSyxFQUFFLFdBQVc7aUJBQ3JCO2FBQ0o7U0FDSixDQUFDO0tBRUw7SUFDREMsU0FBUyxFQUFFO1FBQ1AsTUFBTUMsT0FBTyxFQUFDLEVBQUNBLE9BQU8sR0FBQyxFQUFFO1lBQ3ZCLElBQUk7Z0JBQ0YsTUFBTUMsc0JBQXNCLEdBQUcsTUFBTWIsd0RBQVcsQ0FDOUNILDhDQUFLLENBQ0hBLHVEQUFjLENBQUM7b0JBQ2JBLGdEQUFPLENBQ0xBLGdEQUFPLENBQUMsMEJBQTBCLENBQUMsRUFDbkNBLGlEQUFRLENBQ04sS0FBSyxFQUNMQSw4Q0FBSyxDQUNIQSxnREFBTyxDQUNMQSxnREFBTyxDQUFDLGVBQWUsQ0FBQyxFQUN4QkEsbURBQVUsQ0FBQ2UsT0FBTyxDQUFDUSxJQUFJLENBQUNDLEtBQUssQ0FBQyxDQUMvQixDQUNGLENBQ0YsQ0FDRjtvQkFDRHhCLGdEQUFPLENBQ0xBLGdEQUFPLENBQUMsd0JBQXdCLENBQUMsRUFDakMsUUFBUSxDQUNUO2lCQUNGLENBQUMsQ0FDSCxDQUNGO2dCQUVELE9BQU87b0JBQ0wsR0FBR2UsT0FBTztvQkFDVlUsa0JBQWtCLEVBQUVULHNCQUFzQjtpQkFDM0M7YUFDRixDQUFDLE9BQU07Z0JBQ04sT0FBTztvQkFDTCxHQUFHRCxPQUFPO29CQUNWVSxrQkFBa0IsRUFBRSxJQUFJO2lCQUN6QjthQUNGO1NBQ0Y7UUFDRCxNQUFNQyxNQUFNLEVBQUMsRUFBRUgsSUFBSSxHQUFFSSxPQUFPLEdBQUVDLE9BQU8sR0FBRUMsV0FBVyxHQUFFLEVBQUU7WUFDbEQsTUFBTSxFQUFFTCxLQUFLLEdBQUUsR0FBR0QsSUFBSTtZQUV0QixJQUFJO2dCQUNBLGlCQUFpQjtnQkFDakIsTUFBTXBCLHdEQUFXLENBQ2JILDhDQUFLLENBQ0g7b0JBQ0UrQixVQUFVLEVBQUUvQixpREFBUSxDQUNsQkEsZ0RBQU8sQ0FDTEEsZ0RBQU8sQ0FBQyxlQUFlLENBQUMsRUFDeEJBLG1EQUFVLENBQUN1QixJQUFJLENBQUNDLEtBQUssQ0FBQyxDQUN2QixDQUNGO2lCQUNGLEVBQ0R4Qiw2Q0FBSSxDQUNGQSw4Q0FBSyxDQUFDLFlBQVksQ0FBQyxFQUNuQkEsOENBQUssQ0FDSEEsZ0RBQU8sQ0FDTEEsZ0RBQU8sQ0FBQyxlQUFlLENBQUMsRUFDeEJBLG1EQUFVLENBQUN1QixJQUFJLENBQUNDLEtBQUssQ0FBQyxDQUN2QixDQUNGLEVBQ0R4QixpREFBUSxDQUNOQSxxREFBWSxDQUFDLE9BQU8sQ0FBQyxFQUNyQjtvQkFDRXFDLElBQUksRUFBRTt3QkFBRWIsS0FBSztxQkFBRTtpQkFDaEIsQ0FDRixDQUNGLENBQ0YsQ0FDRjtnQkFFSCxPQUFPLElBQUk7YUFDZCxDQUFDLE9BQU07Z0JBQ0osT0FBTyxLQUFLO2FBQ2Y7U0FHSjtLQUNKO0NBQ0osQ0FBQyIsInNvdXJjZXMiOlsid2VicGFjazovL2lnbmV3cy8uL3NyYy9wYWdlcy9hcGkvYXV0aC9bLi4ubmV4dGF1dGhdLnRzPzUwYTEiXSwic291cmNlc0NvbnRlbnQiOlsiaW1wb3J0IHsgcXVlcnkgYXMgcSB9IGZyb20gJ2ZhdW5hZGInO1xyXG5cclxuaW1wb3J0IE5leHRBdXRoIGZyb20gJ25leHQtYXV0aCc7XHJcbmltcG9ydCBHaXRIdWJQcm92aWRlciBmcm9tIFwibmV4dC1hdXRoL3Byb3ZpZGVycy9naXRodWJcIjtcclxuXHJcbmltcG9ydCB7IGZhdW5hIH0gZnJvbSAnLi4vLi4vLi4vc2VydmljZXMvZmF1bmEnO1xyXG5cclxuZXhwb3J0IGRlZmF1bHQgTmV4dEF1dGgoe1xyXG4gICAgLy8gQ29uZmlndXJlIHVtIG91IG1haXMgYXV0ZW50aWNhw6fDo28gcHJvdmlkZXJcclxuICAgIHByb3ZpZGVyczogW1xyXG4gICAgICAgIEdpdEh1YlByb3ZpZGVyKHtcclxuICAgICAgICAgICAgY2xpZW50SWQ6IHByb2Nlc3MuZW52LkdJVEhVQl9DTElFTlRfSUQsXHJcbiAgICAgICAgICAgIGNsaWVudFNlY3JldDogcHJvY2Vzcy5lbnYuR0lUSFVCX0NMSUVOVF9TRUNSRVQsXHJcbiAgICAgICAgICAgIC8vTyBxdWUgc2Vyw6EgbmVjZXNzYXJpbyByZXBhc3NhclxyXG4gICAgICAgICAgICBhdXRob3JpemF0aW9uOiB7XHJcbiAgICAgICAgICAgICAgICAvL09zIHBhcmFtZXRyb3NcclxuICAgICAgICAgICAgICAgIHBhcmFtczoge1xyXG4gICAgICAgICAgICAgICAgICAgIHNjb3BlOiAncmVhZDp1c2VyJyxcclxuICAgICAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgIH0sXHJcbiAgICAgICAgfSksXHJcbiAgICAgICAgLy8uLiBBZGNpb25lIG1haXMgcHJvdmlkZXMgYXF1aVxyXG4gICAgXSxcclxuICAgIGNhbGxiYWNrczoge1xyXG4gICAgICAgIGFzeW5jIHNlc3Npb24oe3Nlc3Npb259KSB7XHJcbiAgICAgICAgICB0cnkge1xyXG4gICAgICAgICAgICBjb25zdCB1c2VyQWN0aXZlU3Vic2NyaXB0aW9uID0gYXdhaXQgZmF1bmEucXVlcnkoXHJcbiAgICAgICAgICAgICAgcS5HZXQoXHJcbiAgICAgICAgICAgICAgICBxLkludGVyc2VjdGlvbihbXHJcbiAgICAgICAgICAgICAgICAgIHEuTWF0Y2goXHJcbiAgICAgICAgICAgICAgICAgICAgcS5JbmRleCgnc3Vic2NyaXB0aW9uX2J5X3VzZXJfcmVmJyksXHJcbiAgICAgICAgICAgICAgICAgICAgcS5TZWxlY3QoXHJcbiAgICAgICAgICAgICAgICAgICAgICBcInJlZlwiLFxyXG4gICAgICAgICAgICAgICAgICAgICAgcS5HZXQoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHEuTWF0Y2goXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgcS5JbmRleCgndXNlcl9ieV9lbWFpbCcpLFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHEuQ2FzZWZvbGQoc2Vzc2lvbi51c2VyLmVtYWlsKVxyXG4gICAgICAgICAgICAgICAgICAgICAgICApXHJcbiAgICAgICAgICAgICAgICAgICAgICApXHJcbiAgICAgICAgICAgICAgICAgICAgKVxyXG4gICAgICAgICAgICAgICAgICApLFxyXG4gICAgICAgICAgICAgICAgICBxLk1hdGNoKFxyXG4gICAgICAgICAgICAgICAgICAgIHEuSW5kZXgoJ3N1YnNjcmlwdGlvbl9ieV9zdGF0dXMnKSxcclxuICAgICAgICAgICAgICAgICAgICBcImFjdGl2ZVwiXHJcbiAgICAgICAgICAgICAgICAgIClcclxuICAgICAgICAgICAgICAgIF0pXHJcbiAgICAgICAgICAgICAgKVxyXG4gICAgICAgICAgICApXHJcbiAgXHJcbiAgICAgICAgICAgIHJldHVybiB7XHJcbiAgICAgICAgICAgICAgLi4uc2Vzc2lvbixcclxuICAgICAgICAgICAgICBhY3RpdmVTdWJzY3JpcHRpb246IHVzZXJBY3RpdmVTdWJzY3JpcHRpb25cclxuICAgICAgICAgICAgfVxyXG4gICAgICAgICAgfSBjYXRjaCB7XHJcbiAgICAgICAgICAgIHJldHVybiB7XHJcbiAgICAgICAgICAgICAgLi4uc2Vzc2lvbixcclxuICAgICAgICAgICAgICBhY3RpdmVTdWJzY3JpcHRpb246IG51bGwsXHJcbiAgICAgICAgICAgIH1cclxuICAgICAgICAgIH1cclxuICAgICAgICB9LFxyXG4gICAgICAgIGFzeW5jIHNpZ25Jbih7IHVzZXIsIGFjY291bnQsIHByb2ZpbGUsIGNyZWRlbnRpYWxzIH0pIHtcclxuICAgICAgICAgICAgY29uc3QgeyBlbWFpbCB9ID0gdXNlcjtcclxuICAgICAgICAgICAgXHJcbiAgICAgICAgICAgIHRyeSB7XHJcbiAgICAgICAgICAgICAgICAvL0NyZWF0ZSBpcyBmYXVuYVxyXG4gICAgICAgICAgICAgICAgYXdhaXQgZmF1bmEucXVlcnkoXHJcbiAgICAgICAgICAgICAgICAgICAgcS5MZXQoXHJcbiAgICAgICAgICAgICAgICAgICAgICB7XHJcbiAgICAgICAgICAgICAgICAgICAgICAgIHVzZXJFeGlzdHM6IHEuRXhpc3RzKFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHEuTWF0Y2goXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICBxLkluZGV4KFwidXNlcl9ieV9lbWFpbFwiKSxcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIHEuQ2FzZWZvbGQodXNlci5lbWFpbClcclxuICAgICAgICAgICAgICAgICAgICAgICAgICApXHJcbiAgICAgICAgICAgICAgICAgICAgICAgIClcclxuICAgICAgICAgICAgICAgICAgICAgIH0sXHJcbiAgICAgICAgICAgICAgICAgICAgICBxLklmKFxyXG4gICAgICAgICAgICAgICAgICAgICAgICBxLlZhcigndXNlckV4aXN0cycpLFxyXG4gICAgICAgICAgICAgICAgICAgICAgICBxLkdldChcclxuICAgICAgICAgICAgICAgICAgICAgICAgICBxLk1hdGNoKFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgcS5JbmRleCgndXNlcl9ieV9lbWFpbCcpLFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgcS5DYXNlZm9sZCh1c2VyLmVtYWlsKVxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgIClcclxuICAgICAgICAgICAgICAgICAgICAgICAgKSxcclxuICAgICAgICAgICAgICAgICAgICAgICAgcS5DcmVhdGUoXHJcbiAgICAgICAgICAgICAgICAgICAgICAgICAgcS5Db2xsZWN0aW9uKCd1c2VycycpLFxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgIHtcclxuICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRhdGE6IHsgZW1haWwgfVxyXG4gICAgICAgICAgICAgICAgICAgICAgICAgIH1cclxuICAgICAgICAgICAgICAgICAgICAgICAgKVxyXG4gICAgICAgICAgICAgICAgICAgICAgKVxyXG4gICAgICAgICAgICAgICAgICAgIClcclxuICAgICAgICAgICAgICAgICAgKVxyXG5cclxuICAgICAgICAgICAgICAgIHJldHVybiB0cnVlXHJcbiAgICAgICAgICAgIH0gY2F0Y2gge1xyXG4gICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlXHJcbiAgICAgICAgICAgIH1cclxuXHJcbiAgICAgICAgICAgIFxyXG4gICAgICAgIH0sXHJcbiAgICB9LFxyXG59KSJdLCJuYW1lcyI6WyJxdWVyeSIsInEiLCJOZXh0QXV0aCIsIkdpdEh1YlByb3ZpZGVyIiwiZmF1bmEiLCJwcm92aWRlcnMiLCJjbGllbnRJZCIsInByb2Nlc3MiLCJlbnYiLCJHSVRIVUJfQ0xJRU5UX0lEIiwiY2xpZW50U2VjcmV0IiwiR0lUSFVCX0NMSUVOVF9TRUNSRVQiLCJhdXRob3JpemF0aW9uIiwicGFyYW1zIiwic2NvcGUiLCJjYWxsYmFja3MiLCJzZXNzaW9uIiwidXNlckFjdGl2ZVN1YnNjcmlwdGlvbiIsIkdldCIsIkludGVyc2VjdGlvbiIsIk1hdGNoIiwiSW5kZXgiLCJTZWxlY3QiLCJDYXNlZm9sZCIsInVzZXIiLCJlbWFpbCIsImFjdGl2ZVN1YnNjcmlwdGlvbiIsInNpZ25JbiIsImFjY291bnQiLCJwcm9maWxlIiwiY3JlZGVudGlhbHMiLCJMZXQiLCJ1c2VyRXhpc3RzIiwiRXhpc3RzIiwiSWYiLCJWYXIiLCJDcmVhdGUiLCJDb2xsZWN0aW9uIiwiZGF0YSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(api)/./src/pages/api/auth/[...nextauth].ts\n");
+
+/***/ }),
+
+/***/ "(api)/./src/services/fauna.ts":
+/*!*******************************!*\
+  !*** ./src/services/fauna.ts ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"fauna\": () => (/* binding */ fauna)\n/* harmony export */ });\n/* harmony import */ var faunadb__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! faunadb */ \"faunadb\");\n/* harmony import */ var faunadb__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(faunadb__WEBPACK_IMPORTED_MODULE_0__);\n\nconst fauna = new faunadb__WEBPACK_IMPORTED_MODULE_0__.Client({\n    secret: process.env.FAUNADB_KEY\n});\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiKGFwaSkvLi9zcmMvc2VydmljZXMvZmF1bmEudHMuanMiLCJtYXBwaW5ncyI6Ijs7Ozs7O0FBQWlDO0FBRTFCLE1BQU1DLEtBQUssR0FBRyxJQUFJRCwyQ0FBTSxDQUFDO0lBQzlCRSxNQUFNLEVBQUVDLE9BQU8sQ0FBQ0MsR0FBRyxDQUFDQyxXQUFXO0NBQ2hDLENBQUMiLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly9pZ25ld3MvLi9zcmMvc2VydmljZXMvZmF1bmEudHM/MzIzYSJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgeyBDbGllbnQgfSBmcm9tICdmYXVuYWRiJztcclxuXHJcbmV4cG9ydCBjb25zdCBmYXVuYSA9IG5ldyBDbGllbnQoe1xyXG4gIHNlY3JldDogcHJvY2Vzcy5lbnYuRkFVTkFEQl9LRVkgIFxyXG59KSJdLCJuYW1lcyI6WyJDbGllbnQiLCJmYXVuYSIsInNlY3JldCIsInByb2Nlc3MiLCJlbnYiLCJGQVVOQURCX0tFWSJdLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///(api)/./src/services/fauna.ts\n");
+
+/***/ })
+
+};
+;
+
+// load runtime
+var __webpack_require__ = require("../../../webpack-api-runtime.js");
+__webpack_require__.C(exports);
+var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
+var __webpack_exports__ = (__webpack_exec__("(api)/./src/pages/api/auth/[...nextauth].ts"));
+module.exports = __webpack_exports__;
+
+})();
